@@ -27,16 +27,17 @@ classdef Robot < OM_X_arm
             % Robot Dimensions
             self.mDim = [96.326, 130.23, 124, 133.4]; % (mm)
             self.mOtherDim = [128, 24]; % (mm)
-            self.mDHTable = [0 self.mDim(1) 0 -90;...
-                            (asind(self.mOtherDim(2)/self.mOtherDim(1)) - 90) 0 self.mDim(2) 0;...
-                            (90 - asind(self.mOtherDim(2)/self.mOtherDim(1))) 0 self.mDim(3) 0;...
-                            0 0 self.mDim(4) 0];
+%             self.mDHTable = [0 self.mDim(1) 0 -90;...
+%                             (asind(self.mOtherDim(2)/self.mOtherDim(1)) - 90) 0 self.mDim(2) 0;...
+%                             (90 - asind(self.mOtherDim(2)/self.mOtherDim(1))) 0 self.mDim(3) 0;...
+%                             0 0 self.mDim(4) 0];
         end
 
         % Sends the joints to the desired angles
         % goals [1x4 double] - angles (degrees) for each of the joints to go to
         function writeJoints(self, goals)
             goals = mod(round(goals .* DX_XM430_W350.TICKS_PER_DEG + DX_XM430_W350.TICK_POS_OFFSET), DX_XM430_W350.TICKS_PER_ROT);
+            
             self.bulkReadWrite(DX_XM430_W350.POS_LEN, DX_XM430_W350.GOAL_POSITION, goals);
         end
 

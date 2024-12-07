@@ -13,10 +13,9 @@ pause(travelTime); % Wait for trajectory completion
 % robot.writeJoints([-45, -2, 41.5, -39.5]); % Write joint values
 % robot.getJointsReadings()
 robot.writeJoints([-45, -2, 41.5, -39.5])
-while true
-    robot.getJointsReadings()
-end
-
+% while true
+%     robot.getJointsReadings()
+% end
 
 % for baseWayPoint = baseWayPoints % Iterate through waypoints
 % 
