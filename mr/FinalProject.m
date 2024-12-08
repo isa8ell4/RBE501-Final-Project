@@ -19,21 +19,21 @@ slist = [[0; 0; 1; 0;            0; 0     ]...
 M = [0,0,-1,l3x+l4+l5;
      0,1,0,0;
      1,0,0,l1+l2+l3z;
-     0,0,0,1];
+     0,0,0,1]
 %% Task 1 part a
 Ta = [0,0.7071,0.7071,0.185;
      0,0.7071,-0.7071,-0.185;
      1,0,     0,      0.185;
      0,0,0,1];
 
-eomg = 0.001;
-ev = 0.001;
+eomg = 0.01;
+ev = 0.01;
 thetalistGuess = [deg2rad(-45);deg2rad(-43.3925);deg2rad(71.8158);deg2rad(-28.4233)];
 %to get answer uncomment
-FKinSpace(M, slist, thetalistGuess)
+FKinSpace(M, slist, thetalistGuess);
 thetalist2 = IKinSpace(slist, M, Ta, thetalistGuess, eomg, ev);
-rad2deg(thetalist2)
-FKinSpace(M, slist, thetalist2)
+rad2deg(thetalist2);
+FKinSpace(M, slist, thetalist2);
 
 %% Task 1 part b
 
@@ -57,7 +57,19 @@ Tb_inter2 = [0,-0.6766,-0.7363,0.185;
             0,0,0,1];
 % plug in theta1 from calculations and other thetas from prev step
 thetaListB = [deg2rad(42.58049078); deg2rad(-80); deg2rad(70); deg2rad(18.3452)];
-FKinSpace(M, slist, thetaListB)
+FKinSpace(M, slist, thetaListB);
 thetalist2b2 = IKinSpace(slist, M, Tb_inter2, thetaListB, eomg, ev);
-rad2deg(thetalist2b2)
-FKinSpace(M, slist, thetalist2b2)
+rad2deg(thetalist2b2);
+FKinSpace(M, slist, thetalist2b2);
+
+%% Task 2 
+Tc = [0,0,-1,0.185;
+     0,1,0,0;
+     1,0,0,0.240;
+     0,0,0,1];
+
+thetaListC_guess = [0;deg2rad(-45);deg2rad(45);rad2deg(0)];
+FKinSpace(M, slist, thetaListC_guess)
+thetalistC = IKinSpace(slist, M, Tc, thetaListC_guess, eomg, ev)
+rad2deg(thetalistC)
+FKinSpace(M, slist, thetalistC)
