@@ -56,7 +56,7 @@ Tb_inter2 = [0,-0.6766,-0.7363,0.185;
             1,0,0,0.070;
             0,0,0,1];
 % plug in theta1 from calculations and other thetas from prev step
-thetaListB = [deg2rad(42.58049078); deg2rad(-153.1435); deg2rad(134.7984); deg2rad(18.3452)];
+thetaListB = [deg2rad(42.58049078); deg2rad(-80); deg2rad(70); deg2rad(18.3452)];
 FKinSpace(M, slist, thetaListB)
 thetalist2b2 = IKinSpace(slist, M, Tb_inter2, thetaListB, eomg, ev);
 rad2deg(thetalist2b2)

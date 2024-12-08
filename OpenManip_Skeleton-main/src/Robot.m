@@ -37,7 +37,6 @@ classdef Robot < OM_X_arm
         % goals [1x4 double] - angles (degrees) for each of the joints to go to
         function writeJoints(self, goals)
             goals = mod(round(goals .* DX_XM430_W350.TICKS_PER_DEG + DX_XM430_W350.TICK_POS_OFFSET), DX_XM430_W350.TICKS_PER_ROT);
-            
             self.bulkReadWrite(DX_XM430_W350.POS_LEN, DX_XM430_W350.GOAL_POSITION, goals);
         end
 
