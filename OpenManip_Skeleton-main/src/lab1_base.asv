@@ -1,6 +1,6 @@
 %% Setup robot
 speedRate = 1; % Constant that determines speed percentage
-travelTime = 2 / speedRate; % Defines the travel time (seconds)
+travelTime = 1.5 / speedRate; % Defines the travel time (seconds)
 acc_time = 0.5 / speedRate; % Acceleration time (seconds)
 robot = Robot(); % Creates robot object
 robot.writeTime(travelTime); % Write travel time
@@ -40,8 +40,7 @@ robot.writeMotorState(true); % Write position mode
 %% Task 2
 thetasA = [-45; -2.0115; 41.5415; -39.53];
 thetasB = [42; 52; 42; -95];
-thetasC = [0; -51.3456; 48.5069; 0];
-
+thetasC = [0; -51.3456; 48.5069; 2.8386];
 
 m=100;
 qAC1 = lspb(thetasA(1), thetasC(1), m);
@@ -61,10 +60,7 @@ robot.writeMode('cp')
 robot.writeJoints(thetasA.')
 pause(travelTime);
 
-
-it = size(qAC);
 i = 1;
-
 velReadingsAC = zeros(1, 4);
 posReadingsAC = thetasA.';
 
@@ -91,10 +87,8 @@ end
 totalTime = toc;
 disp('at pos c')
 
+pause(1);
 
-pause(5);
-
-% 
 % i = 1;
 % while i < it(1)
 %     robot.writeJoints(qCB(i, :))
@@ -102,12 +96,7 @@ pause(5);
 %     i = i+1;
 % end
 
-
-
-
 %% Task 3
-
-
 robot.writeMode('cp')
 robot.writeJoints(thetasA.')
 pause(2);
@@ -119,26 +108,20 @@ pause(2);
 % % % calc vel from qAC
 
 robot.writeMode('v')
-pause(travelTime);
 i = 1;
-deltaP = inf;
-deltaPHistory = zeros(1,1);
+deltaP = 1000*ones(1,4);
+deltaPHistory = zeros(1,4);
 
-while (deltaP > 1 || i < size(velReadingsAC, 1))
+while (max(deltaP) > 1 || i < size(velReadingsAC, 1))
     readings = robot.getJointsReadings();
-
     if i >= size(velReadingsAC,1)
-        deltaP = max(abs(readings(1,:)) - abs(thetasC.'));
+        deltaP = abs(readings(1,:)) - abs(thetasC.');
         deltaPHistory = vertcat(deltaPHistory, deltaP);
-        disp('here')
-        vel = closenessControl(deltaP, vel, 1)
-        robot.writeVelocities(vel);
     else
-%         vel = velReadingsAC(i,:);
-        vel = velPID(readings(1,:), thetasC, readings(2,:), 1, 0.5, 0.05, 0.01)
+        vel = velReadingsAC(i,:).';
         robot.writeVelocities(vel);
-        pause(0.01);
-        deltaP = max(abs(readings(1,:)) - abs(thetasC.'));
+        pause(totalTime/size(velReadingsAC, 1));
+        deltaP = abs(readings(1,:)) - abs(thetasC.');
         deltaPHistory = vertcat(deltaPHistory, deltaP);
         i = i+1;
     end
@@ -156,6 +139,23 @@ robot.writeVelocities([0,0,0,0]);
 %         robot.writeVelocities(vel);
 %         pause(travelTime/100);
 %         deltaV = max(abs(readings(1,:)) - abs(thetasC.'));
+%         i = i+1;
+%     end
+% end
+
+% while (max(deltaP) > 1) %|| i < size(velReadingsAC, 1))
+%     readings = robot.getJointsReadings();
+% 
+%     if i >= size(velReadingsAC,1)
+%         deltaP = abs(readings(1,:)) - abs(thetasC.');
+%         deltaPHistory = vertcat(deltaPHistory, deltaP);
+%     else
+% %         vel = velReadingsAC(i,:);
+%         vel = velPID(readings(1,:), thetasC, readings(2,:), 1, 0.5, 0.05, 0.01, [0,0,0,0]);
+%         robot.writeVelocities(vel);
+%         pause(0.01);
+%         deltaP = abs(readings(1,:)) - abs(thetasC.');
+%         deltaPHistory = vertcat(deltaPHistory, deltaP);
 %         i = i+1;
 %     end
 % end
