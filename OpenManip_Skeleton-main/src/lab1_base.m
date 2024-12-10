@@ -18,7 +18,7 @@ currents = [1000, 1000, 1000, 1000];
 % [qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 % Task 3: LSPB Velocity
-lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime, speedRate);
+% lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime, speedRate);
 
 
 
@@ -106,15 +106,15 @@ for i = 1:(size(qAB, 1)-2)
     tauCalcAB = vertcat(tauCalcAB, instTau.');
 end
 
-% % figure;
-% % xlabel('Time (s)');
-% % ylabel('Torques');
-% % title('Taulist at Joint 2')
-% % hold on;
-% % 
-% % j2_tau = tauCalcAB(:,2);
-% % 
-% % plot(j2_tau)
+figure;
+xlabel('Time (s)');
+ylabel('Torques');
+title('Taulist at Joint 2')
+hold on;
+
+j2_tau = tauCalcAB(:,2);
+
+plot(j2_tau)
 
 
 
