@@ -85,6 +85,8 @@ Glist = cat(4, G1, G2, G3, G4);
 Mlist = cat(4, M01, M12, M23, M34, M45);
 
 tauList = InverseDynamics(thetalist2, dthetalist, ddthetalist, g, Ftip, Mlist, Glist, slist)
+thetalist2
+
 
 
 

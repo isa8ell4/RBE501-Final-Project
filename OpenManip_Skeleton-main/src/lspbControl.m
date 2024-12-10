@@ -1,4 +1,4 @@
-function lspbControl(robot, thetasA, thetasB, thetasC, travelTime)
+function [qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime)
     % Linear Segment with Parabolic Blend Control
     robot.writeMode('cp')
     robot.writeJoints(thetasA.')

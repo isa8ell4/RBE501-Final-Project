@@ -15,10 +15,29 @@ currents = [1000, 1000, 1000, 1000];
 % cpControl(robot, travelTime, thetasA, thetasB, currents);
 
 % % Task 2: LSPB
-% lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
+[qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 % Task 3: LSPB Velocity
 lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime);
+
+
+
+
+%% Task 4
+
+% calc vel from trajectory
+velCalcAC = getDerivative(qAC, totalTime);
+accCalcAC = getDerivative(qAC, totalTime);
+
+% maybe do this with C to B and stitch it together?
+g = [0; 0; -9.8];
+tauCalc = zeros(1,4);
+for i = 1:size(qAC, 1)
+    instTau = InverseDynamics(qAC(i,:).', velCalc(i, :).', accCalc(i, :).', g, Ftip, Mlist, Glist, Slist);
+    tauCalc = vertcat(tauCalc, instTau);
+end
+
+
 
 
 %% Task 3
@@ -122,14 +141,5 @@ lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime);
 %         i = i+1;
 %     end
 % end
-
-%% Task 4
-
-
-
-
-
-
-
 
 

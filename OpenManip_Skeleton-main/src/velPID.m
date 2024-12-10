@@ -24,5 +24,5 @@ function jointVel = velPID(currentPos, desiredPos, currentVel, Kp, Ki, Kd, dt, i
     derivativeError = -currentVel; % Angular velocity is derivative of position
     
     % PID formula for angular velocity
-    jointVel = Kp .* error + Ki .* integralError + Kd .* derivativeError;
+    jointVel =  Kp .* error + Ki .* integralError + Kd .* derivativeError;
 end
