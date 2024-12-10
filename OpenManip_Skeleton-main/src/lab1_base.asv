@@ -11,62 +11,60 @@ thetasB = [42; 52; 42; -95];
 thetasC = [0; -51.3456; 48.5069; 2.8386];
 currents = [1000, 1000, 1000, 1000];
 
-% Task 1: Current-Based Position Control Mode
+% % Task 1: Current-Based Position Control Mode
 % cpControl(robot, travelTime, thetasA, thetasB, currents);
 
-% Task 2: LSPB
+% % Task 2: LSPB
 % lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 % Task 3: LSPB Velocity
-% lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime);
-
-
+lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 
 %% Task 3
-robot.writeMode('cp')
-robot.writeJoints(thetasA.')
-pause(2);
-
-% % % calc vel from qACrobot.writeMode('cp')
-% % % calc vel from qAC
-
-robot.writeMode('v')
-i = 1;
-deltaPA = 1000*ones(1,4);
-deltaPHistory = zeros(1,4);
-velHistory = zeros(1,4);
-while (max(deltaPA) > 1)
-    readings = robot.getJointsReadings();
-    vel = velPID(readings(1,:), thetasC.', readings(2,:), 0.3, 0.025, 0.05, 0.01, [0,0,0,0]);
-    velHistory = vertcat(velHistory, vel);
-    robot.writeVelocities(vel);
-    pause(0.01);
-    deltaPA = abs(readings(1,:)) - abs(thetasC.');
-    deltaPHistory = vertcat(deltaPHistory, deltaPA);
-    i = i+1;
-end
-disp('at pos c')
-robot.writeVelocities([0,0,0,0]);
-
-
-i = 1;
-deltaPB = 1000*ones(1,4);
-deltaPHistory = zeros(1,4);
-velHistory = zeros(1,4);
-pause(2)
-while (max(deltaPB) > 1)
-    readings = robot.getJointsReadings();
-    vel = velPID(readings(1,:), thetasB.', readings(2,:), 0.3, 0.005, 0.05, 0.03, [0,0,0,0]);
-    velHistory = vertcat(velHistory, vel);
-    robot.writeVelocities(vel);
-    pause(0.01);
-    deltaPB = abs(readings(1,:)) - abs(thetasB.');
-    deltaPHistory = vertcat(deltaPHistory, deltaPB);
-    i = i+1;
-end
-disp('at pos b')
-robot.writeVelocities([0,0,0,0]);
+% robot.writeMode('cp')
+% robot.writeJoints(thetasA.')
+% pause(2);
+% 
+% % % % calc vel from qACrobot.writeMode('cp')
+% % % % calc vel from qAC
+% 
+% robot.writeMode('v')
+% i = 1;
+% deltaPA = 1000*ones(1,4);
+% deltaPHistory = zeros(1,4);
+% velHistory = zeros(1,4);
+% while (max(deltaPA) > 1)
+%     readings = robot.getJointsReadings();
+%     vel = velPID(readings(1,:), thetasC.', readings(2,:), 0.3, 0.025, 0.05, 0.01, [0,0,0,0]);
+%     velHistory = vertcat(velHistory, vel);
+%     robot.writeVelocities(vel);
+%     pause(0.01);
+%     deltaPA = abs(readings(1,:)) - abs(thetasC.');
+%     deltaPHistory = vertcat(deltaPHistory, deltaPA);
+%     i = i+1;
+% end
+% disp('at pos c')
+% robot.writeVelocities([0,0,0,0]);
+% 
+% 
+% i = 1;
+% deltaPB = 1000*ones(1,4);
+% deltaPHistory = zeros(1,4);
+% velHistory = zeros(1,4);
+% pause(2)
+% while (max(deltaPB) > 1)
+%     readings = robot.getJointsReadings();
+%     vel = velPID(readings(1,:), thetasB.', readings(2,:), 0.3, 0.005, 0.05, 0.03, [0,0,0,0]);
+%     velHistory = vertcat(velHistory, vel);
+%     robot.writeVelocities(vel);
+%     pause(0.01);
+%     deltaPB = abs(readings(1,:)) - abs(thetasB.');
+%     deltaPHistory = vertcat(deltaPHistory, deltaPB);
+%     i = i+1;
+% end
+% disp('at pos b')
+% robot.writeVelocities([0,0,0,0]);
 
 % while (deltaV > 1 || i < size(velReadingsAC, 1))
 %     readings = robot.getJointsReadings();
@@ -124,6 +122,8 @@ robot.writeVelocities([0,0,0,0]);
 %         i = i+1;
 %     end
 % end
+
+%% Task 4
 
 
 

@@ -123,6 +123,8 @@ lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime);
 %     end
 % end
 
+%% Task 4
+
 
 
 
