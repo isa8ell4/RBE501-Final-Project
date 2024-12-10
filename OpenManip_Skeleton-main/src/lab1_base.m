@@ -1,5 +1,5 @@
 %% Setup robot
-speedRate = 1; % Constant that determines speed percentage
+speedRate = 0.8; % Constant that determines speed percentage
 travelTime = 1 / speedRate; % Defines the travel time (seconds)
 acc_time = 0.5 / speedRate; % Acceleration time (seconds)
 robot = Robot(); % Creates robot object
@@ -12,14 +12,13 @@ thetasC = [0; -51.3456; 48.5069; 2.8386];
 currents = [1000, 1000, 1000, 1000];
 
 % % Task 1: Current-Based Position Control Mode
-% cpControl(robot, travelTime, thetasA, thetasB, currents);
+% currentReadings = cpControl(robot, travelTime, thetasA, thetasB, currents, speedRate);
 
 % % Task 2: LSPB
 % [qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 % Task 3: LSPB Velocity
-lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime);
-
+lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime, speedRate);
 
 
 
@@ -30,77 +29,92 @@ ws = [[0,0,1];
       [0,1,0];
       [0,1,0];
       [0,1,0]];
-l1 = convlength(1.50373, 'in', 'm'); % 
-l2 = convlength(3.79237, 'in', 'm'); % 
-l3 = convlength(5.12719, 'in', 'm');
-l3x = convlength(0.94488, 'in', 'm');
-l3z = convlength(5.03937, 'in', 'm');
-l4 = convlength(4.88189, 'in', 'm');
-l5 = convlength(5.76546, 'in', 'm');
-
+% l1 = convlength(1.50373, 'in', 'm'); % 
+% l2 = convlength(3.79237, 'in', 'm'); % 
+% l3 = convlength(5.12719, 'in', 'm');
+% l3x = convlength(0.94488, 'in', 'm');
+% l3z = convlength(5.03937, 'in', 'm');
+% l4 = convlength(4.88189, 'in', 'm');
+% l5 = convlength(5.76546, 'in', 'm');
+l1 = 0.096326;
+l2z = 0.128;
+l2x = 0.024;
+l3 = 0.12074;
+l4 = 145.45;
 slist = [[0; 0; 1; 0;            0; 0     ]...
-         [0; 1; 0; -(l1+l2);     0; 0     ]...
-         [0; 1; 0; -(l1+l2+l3z); 0; l3x   ]...
-         [0; 1; 0; -(l1+l2+l3z); 0; l3x+l4]];
+         [0; 1; 0; -(l1);     0; 0     ]...
+         [0; 1; 0; -(l1+l2z); 0; l2x   ]...
+         [0; 1; 0; -(l1+l2z); 0; l2x+l3]];
 
-M = [0,0,-1,l3x+l4+l5;
+M = [0,0,-1,l2x+l3+l4;
      0,1,0,0;
-     1,0,0,l1+l2+l3z;
+     1,0,0,l1+l2z;
      0,0,0,1];
 
 M01 = [1, 0, 0, 0;...
        0, 1, 0, 0;...
-       0, 0, 1, 0.037136;...
+       0, 0, 1, 0.0723;...
        0, 0, 0, 1];
 
-M12 = [1, 0, 0, 0;...
+M12 = [1, 0, 0, 0.0049;...
        0, 1, 0, 0;...
-       0, 0, 1, 0.0452;...
+       0, 0, 1, 0.1251;...
        0, 0, 0, 1];
 
-M23 = [1, 0, 0, 0.0025;...
-       0, 1, 0, -0.00125477;...
-       0, 0, 1, 0.11061355;...
-       0, 0, 0, 1];
-
-M34 = [1, 0, 0, 0.106;...
+M23 = [1, 0, 0, 0.1129;...
        0, 1, 0, 0;...
-       0, 0, 1, 0.03384191;...
+       0, 0, 1, 0.0251;...
        0, 0, 0, 1];
 
-M45 = [0, 0, -1, 0.10595287;...
+M34 = [1, 0, 0, 0.0969;...
        0, 1, 0, 0;...
-       1, 0, 0, 0.00246;...
+       0, 0, 1, 0.0025;...
        0, 0, 0, 1];
 
-G1 = diag([2.31*1e-4, 2.31*1e-4, 2.98*1e-4, 0.305, 0.305,0.305]);
-G2 = diag([1.85*1e-5, 2.95*1e-5, 3.26*1e-5, 0.094, 0.094, 0.094]);
-G3 = diag([3.5*1e-5, 1.7*1e-4, 1.7*1e-4, 0.095, 0.095, 0.095]);
-G4 = diag([3.47*1e-5, 1.71*1e-4, 1.75*1e-4, 0.079, 0.079,0.079]);
+M45 = [0, 0, -1, 0.0668;...
+       0, 1, 0, 0;...
+       1, 0, 0, -0.00246;...
+       0, 0, 0, 1];
+
+G1 = diag([0.0001, 0.00001, 0.0001, 0.114, 0.114,0.114]); %
+G2 = diag([3.5*1e-5, 1.7*1e-4, 1.7*1e-4, 0.095, 0.095, 0.095]);
+G3 = diag([3.47*1e-5, 1.71*1e-4, 1.75*1e-4, 0.079, 0.079,0.079]);
+G4 = diag([0.0003, 0.0002, 0.0002, 0.214, 0.214, 0.214]); %
 
 Glist = cat(4, G1, G2, G3, G4);
 Mlist = cat(4, M01, M12, M23, M34, M45);
 
-totalTimeAC = 1;
-totalTimeCB = 1;
-% calc vel from trajectory
-velCalcAC = getDerivative(qAC, totalTimeAC); % not sure what totalTime is suppose to be 
-velCalcCB = getDerivative(qCB, totalTimeCB);
-accCalcAC = getDerivative(qAC, totalTimeAC);
-accCalcCB = getDerivative(qCB, totalTimeCB);
+m = 100; % number of points
+qAB1 = lspb(thetasA(1), thetasB(1), m);
+qAB2 = lspb(thetasA(2), thetasB(2), m);
+qAB3 = lspb(thetasA(3), thetasB(3), m);
+qAB4 = lspb(thetasA(4), thetasB(4), m);
+qAB = [qAB1, qAB2, qAB3, qAB4];
 
-velCalc = [velCalcAC; velCalcCB];
-accCalc = [accCalcAC; accCalcCB];
+totalTimeAC = 1;
+% calc vel from trajectory
+velCalcAB = getDerivative(qAB, totalTimeAC); % not sure what totalTime is suppose to be 
+accCalcAB = getDerivative(velCalcAB, totalTimeAC);
+
 
 g = [0; 0; -9.8];
 Ftip = [0;0;0;0;0;0];
 
-tauCalc = zeros(1,4);
-for i = 1:size(qAC, 1)
-    instTau = InverseDynamics(qAC(i,:).', velCalc(i, :).', accCalc(i, :).', g, Ftip, Mlist, Glist, slist);
-    tauCalc = vertcat(tauCalc, instTau.');
+tauCalcAB = zeros(1,4);
+for i = 1:(size(qAB, 1)-2)
+    instTau = InverseDynamics(qAB(i,:).', velCalcAB(i, :).', accCalcAB(i, :).', g, Ftip, Mlist, Glist, slist);
+    tauCalcAB = vertcat(tauCalcAB, instTau.');
 end
 
+% % figure;
+% % xlabel('Time (s)');
+% % ylabel('Torques');
+% % title('Taulist at Joint 2')
+% % hold on;
+% % 
+% % j2_tau = tauCalcAB(:,2);
+% % 
+% % plot(j2_tau)
 
 
 

@@ -1,4 +1,4 @@
-function cpControl(robot, travelTime, pos1, pos2, currents)
+function [j2_current] = cpControl(robot, travelTime, pos1, pos2, currents, percentage)
     % Current-Based Position Control
     robot.writeMode('cp')
     robot.writeJoints(0); % Write joints to zero position
@@ -6,7 +6,8 @@ function cpControl(robot, travelTime, pos1, pos2, currents)
     
     % Initialize variables
     counter = 0;
-    current_readings = robot.getJointsReadings();
+    start = robot.getJointsReadings();
+    currentReadings = start(3, :);
     robot.writeCurrents(currents);
     
     tic;
@@ -18,15 +19,15 @@ function cpControl(robot, travelTime, pos1, pos2, currents)
     figure;
     xlabel('Time (s)');
     ylabel('Current (mA)');
-    title('Motor Currents in Joint 2')
+    title(sprintf('Motor Currents in Joint 2 at %.0f%%', percentage*100));
     hold on;
     
     % Loop to monitor joint positions
     while toc < travelTime*2
         counter = counter + 1;
         readings = robot.getJointsReadings(); % Get current readings
-        current_readings = vertcat(current_readings, readings); % Append readings
-        j2_current = current_readings(:, 2); % Extract second joint data
+        currentReadings = vertcat(currentReadings, readings(3, :)); % Append readings
+        j2_current = currentReadings(:, 2); % Extract second joint data
         plot(j2_current); % Update plot dynamically
         drawnow;
     end
