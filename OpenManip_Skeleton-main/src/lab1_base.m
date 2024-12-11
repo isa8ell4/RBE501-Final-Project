@@ -1,5 +1,5 @@
 %% Setup robot
-speedRate = 0.8; % Constant that determines speed percentage
+speedRate = 1; % Constant that determines speed percentage
 travelTime = 1 / speedRate; % Defines the travel time (seconds)
 acc_time = 0.5 / speedRate; % Acceleration time (seconds)
 robot = Robot(); % Creates robot object
@@ -12,14 +12,15 @@ thetasC = [0; -51.3456; 48.5069; 2.8386];
 currents = [1000, 1000, 1000, 1000];
 
 % % Task 1: Current-Based Position Control Mode
-% currentReadings = cpControl(robot, travelTime, thetasA, thetasB, currents, speedRate);
-
+% [j2current, allCurrentT1] = cpControl(robot, travelTime, thetasA, thetasB, currents, speedRate);
+% avgAllCurrT1 = [mean(allCurrentT1(:,1)), mean(allCurrentT1(:,2)), mean(allCurrentT1(:,3)), mean(allCurrentT1(:,4))];
 % % Task 2: LSPB
 % [qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 % Task 3: LSPB Velocity
 % lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime, speedRate);
-
+% [allCurrentT3AB] = lspbVelocityControlAB(robot, thetasA, thetasB, thetasC, travelTime, speedRate);
+% avgAllCurrT3 = [mean(allCurrentT3AB(:,1)), mean(allCurrentT3AB(:,2)), mean(allCurrentT3AB(:,3)), mean(allCurrentT3AB(:,4))];
 
 
 %% Task 4
@@ -93,10 +94,11 @@ tauA = InverseDynamics(deg2rad(thetasA), dthetalist, ddthetalist, g, Ftip, Mlist
 overallAvgCurrA = [-4.150285714,-234.9815646,-138.9430748,-44.17455782].*0.001;
 
 % get torque-current relationship
-currentTorqueRelationship(overallAvgCurrA, tauA.');
+coefficients = currentTorqueRelationship(overallAvgCurrA, tauA.');
 
 % get current readings while applying known wrench
 FtipKnown = [0;0;0;0;0;-2];
+tauAppliedID = InverseDynamics(deg2rad(thetasA), dthetalist, ddthetalist, g, Ftip, Mlist, Glist, slist)
 
 robot.writeMode('cp')
 robot.writeJoints(thetasA); % Write joints to zero position
@@ -105,11 +107,14 @@ pause(10);
 
 currReadings = zeros(1,4);
 tic;
-while toc < 10
+while toc < 20
     readings = robot.getJointsReadings();
     currReadings = vertcat(currReadings, readings(3, :));
 end
 currReadings = currReadings(2:end, :);
-avgCurrent = [mean(currReadings(:,1)), mean(currReadings(:,2)), mean(currReadings(:,3)), mean(currReadings(:,4))];
+avgCurrAppliedW = [mean(currReadings(:,1)), mean(currReadings(:,2)), mean(currReadings(:,3)), mean(currReadings(:,4))];
+
+tauAppliedReadings = coefficients(1).*avgCurrAppliedW + coefficients(2)
+
 
 

@@ -49,6 +49,7 @@ function [currentReadings] = lspbVelocityControl(robot, thetasA, thetasB, thetas
 
         end
     end
+    
     disp('at pos b')
     robot.writeVelocities([0,0,0,0]);
     totalTime = toc;

@@ -1,4 +1,4 @@
-function [j2_current] = cpControl(robot, travelTime, pos1, pos2, currents, percentage)
+function [j2_current, currentReadings] = cpControl(robot, travelTime, pos1, pos2, currents, percentage)
     % Current-Based Position Control
     robot.writeMode('cp')
     robot.writeJoints(0); % Write joints to zero position

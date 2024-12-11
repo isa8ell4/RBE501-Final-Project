@@ -1,4 +1,4 @@
-function currentTorqueRelationship(avgCurrent,torques)
+function [coefficients]=currentTorqueRelationship(avgCurrent,torques)
 %CURRENTTORQUERELATIONSHIP Summary of this function goes here
 %   Detailed explanation goes here
 
