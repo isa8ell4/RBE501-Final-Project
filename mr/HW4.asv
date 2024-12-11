@@ -84,9 +84,9 @@ Ftip = [0;0;0;0;0;0];
 Glist = cat(4, G1, G2, G3, G4);
 Mlist = cat(4, M01, M12, M23, M34, M45);
 thetasA = [-45; -2.0115; 41.5415; -39.53];
-tauList = InverseDynamics(deg2rad(thetasA), dthetalist, ddthetalist, g, Ftip, Mlist, Glist, slist)
+tauList = InverseDynamics(deg2rad(thetasA).', dthetalist, ddthetalist, g, Ftip, Mlist, Glist, slist)
 % thetalist2
-deg2rad(thetasA).'
+
 
 
 

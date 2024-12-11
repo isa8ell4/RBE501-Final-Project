@@ -84,37 +84,41 @@ G4 = diag([0.0003, 0.0002, 0.0002, 0.214, 0.214, 0.214]); %
 Glist = cat(4, G1, G2, G3, G4);
 Mlist = cat(4, M01, M12, M23, M34, M45);
 
-m = 100; % number of points
-qAB1 = lspb(thetasA(1), thetasB(1), m);
-qAB2 = lspb(thetasA(2), thetasB(2), m);
-qAB3 = lspb(thetasA(3), thetasB(3), m);
-qAB4 = lspb(thetasA(4), thetasB(4), m);
-qAB = [qAB1, qAB2, qAB3, qAB4];
 
-totalTimeAC = 1;
-% calc vel from trajectory
-velCalcAB = getDerivative(qAB, totalTimeAC); % not sure what totalTime is suppose to be 
-accCalcAB = getDerivative(velCalcAB, totalTimeAC);
-
+% robot.writeMode('cp')
+% robot.writeJoints(thetasA); % Write joints to zero position
+% pause(10);
+% 
+% 
+% currentPosA = zeros(1,4);
+% tic;
+% while toc < 5
+%     readings = robot.getJointsReadings();
+% % %     instTau = InverseDynamics(qAB(i,:).', velCalcAB(i, :).', accCalcAB(i, :).', g, Ftip, Mlist, Glist, slist);
+%     currentPosA = vertcat(currentPosA, readings(3, :));
+% end
+% currentPosA = currentPosA(2:end, :);
+% avgCurrPosA = [mean(currentPosA(:,1)), mean(currentPosA(:,2)), mean(currentPosA(:,3)), mean(currentPosA(:,4))];
 
 g = [0; 0; -9.8];
 Ftip = [0;0;0;0;0;0];
+dthetalist = [0;0;0;0];
+ddthetalist = [0;0;0;0];
+tauA = InverseDynamics(deg2rad(thetasA), dthetalist, ddthetalist, g, Ftip, Mlist, Glist, slist);
 
-tauCalcAB = zeros(1,4);
-for i = 1:(size(qAB, 1)-2)
-    instTau = InverseDynamics(qAB(i,:).', velCalcAB(i, :).', accCalcAB(i, :).', g, Ftip, Mlist, Glist, slist);
-    tauCalcAB = vertcat(tauCalcAB, instTau.');
-end
 
-figure;
-xlabel('Time (s)');
-ylabel('Torques');
-title('Taulist at Joint 2')
-hold on;
+overallAvgCurrA = [-4.150285714,-234.9815646,-138.9430748,-44.17455782].*0.001;
 
-j2_tau = tauCalcAB(:,2);
-
-plot(j2_tau)
+currentTorqueRelationship(overallAvgCurrA, tauA.');
+% figure;
+% xlabel('Time (s)');
+% ylabel('Torques');
+% title('Taulist at Joint 2')
+% hold on;
+% 
+% j2_tau = tauCalcAB(:,2);
+% 
+% plot(j2_tau)
 
 
 
