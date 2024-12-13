@@ -15,7 +15,7 @@ currents = [1000, 1000, 1000, 1000];
 % [j2current, allCurrentT1] = cpControl(robot, travelTime, thetasA, thetasB, currents, speedRate);
 % avgAllCurrT1 = [mean(allCurrentT1(:,1)), mean(allCurrentT1(:,2)), mean(allCurrentT1(:,3)), mean(allCurrentT1(:,4))];
 % % Task 2: LSPB
-% [qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
+[qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime);
 
 % Task 3: LSPB Velocity
 % lspbVelocityControl(robot, thetasA, thetasB, thetasC, travelTime, speedRate);
@@ -115,25 +115,25 @@ bList = [[1; 0; 0; 0; 0.2902;0]...
          [0; 1; 0;  -0.2662; 0; 0]...
          [0; 1; 0; -0.1207; 0; 0]];
 %%% static readings at pos A
-currReadings = zeros(1,4);
-Jb = JacobianBody(bList, deg2rad(thetasA));
-wrenchHistory = zeros(1,4);
-tic;
-while toc < 15
-    readings = robot.getJointsReadings();
-    currReadings = vertcat(currReadings, readings(3, :));
-    tauReadings = coefficients(1,1).*(readings(3, :)*0.001) + coefficients(1,2);
-%     pause(0.1)
-%     wrench = -pinv(Jb.') * tauReadings.';
-%     wrenchHistory = vertcat(wrenchHistory, wrench);
-%     wrench = (Jb.').*(tauReadings)
-    
-end
-currReadings = currReadings(2:end, :);
-avgCurrAppliedW = [mean(currReadings(:,1)), mean(currReadings(:,2)), mean(currReadings(:,3)), mean(currReadings(:,4))];
-
-tauAppliedReadings = coefficients(1).*(avgCurrAppliedW)*0.001 + coefficients(2);
-wrenchApplied = -pinv(Jb.') * tauAppliedReadings.'
+% % currReadings = zeros(1,4);
+% % Jb = JacobianBody(bList, deg2rad(thetasA));
+% % wrenchHistory = zeros(1,4);
+% % tic;
+% % while toc < 15
+% %     readings = robot.getJointsReadings();
+% %     currReadings = vertcat(currReadings, readings(3, :));
+% %     tauReadings = coefficients(1,1).*(readings(3, :)*0.001) + coefficients(1,2);
+% %     pause(0.1)
+% %     wrench = -pinv(Jb.') * tauReadings.';
+% %     wrenchHistory = vertcat(wrenchHistory, wrench);
+% %     wrench = (Jb.').*(tauReadings)
+% %     
+% % end
+% % currReadings = currReadings(2:end, :);
+% % avgCurrAppliedW = [mean(currReadings(:,1)), mean(currReadings(:,2)), mean(currReadings(:,3)), mean(currReadings(:,4))];
+% % 
+% % tauAppliedReadings = coefficients(1).*(avgCurrAppliedW)*0.001 + coefficients(2);
+% % wrenchApplied = -pinv(Jb.') * tauAppliedReadings.'
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

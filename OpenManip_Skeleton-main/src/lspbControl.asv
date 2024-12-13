@@ -35,23 +35,16 @@ function [qAC, qCB] = lspbControl(robot, thetasA, thetasB, thetasC, travelTime)
     end
     
     figure;
-
-
-    plot(timeXread, thetaHistory(:, 1), 'r-', 'LineWidth', 1.5);
-    hold on;
-    plot(timeXread, thetaHistory(:, 2), 'b-', 'LineWidth', 1.5);
-    plot(timeXread, thetaHistory(:, 3), 'g-', 'LineWidth', 1.5);
-    plot(timeXread, thetaHistory(:, 4), 'm-', 'LineWidth', 1.5);
     xlabel('Time (s)');
-    ylabel('Position (deg)');
-    title('Position of Joints Traveling from A to C to B');
-
-    legend({'J1', 'J2', 'J3', 'J4'}, ...
-            'Location', 'best');
-    
-    grid on;
-    hold off;
-
+    ylabel('Torque (Nm)');
+    %     title('Current at Joint 2 Velocity Control')
+    % title(sprintf('Motor Current at Joint 2 at %.0f%% Speed (Velocity Control)', percentSpeed*100));
+    allTausReadings = zeros(1,4);
+    for i=1:size(allCurrentT1,1)
+        instTauR = coefficients(1).*allCurrentT1(i,:) + coefficients(2)*ones(1,4);
+        allTausReadings = vertcat(allTausReadings, instTauR);
+    end
+    allTausReadings = allTausReadings(2:end, :);
 end
     
 
